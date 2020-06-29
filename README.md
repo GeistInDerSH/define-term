@@ -4,21 +4,30 @@ Application written in Golang to allow for the user to define a given term.
 
 ## Usage
 
-`def [-l language\_code] word`
+```
+def [-l language\_code] [-s] word
+```
+### Flags
 
-## Language Codes
+#### -l
+The `-l` flag allows the user to specify the language of the word that they would like defined. If this flag is not provided, it defaults to 'en'. All language codes and their language are specified below.
+
+##### Language Codes
 | Code | Language |
 | ---- | -------- |
-| ars  | Arabic |
-| des  | German |
-| ens  | English |
-| ess  | Spanish |
-| frs  | French |
-| his  | Hindi |
-| its  | Italian |
-| jas  | Japanese |
-| kos  | Korean |
+| ar   | Arabic |
+| de   | German |
+| en   | English |
+| es   | Spanish |
+| fr   | French |
+| hi   | Hindi |
+| it   | Italian |
+| ja   | Japanese |
+| ko   | Korean |
 | pt-BR| Brazilian Portuguese |
 | ru   | Russian |
 | tr   | Turkish
 | zh-CN| Chinese (Simplified) |
+
+#### -s
+If the `-s` flag is enabled, then synonyms will be shown for each definition. By default, this is set to false.
