@@ -2,6 +2,9 @@ package definition
 
 import (
 	"fmt"
+	"os"
+	"strings"
+	"text/tabwriter"
 )
 
 type Usage struct {
@@ -34,18 +37,43 @@ func (u Usage) printSynonyms() {
 		return
 	}
 
-	fmt.Printf("        Synonyms: ")
+	w := new(tabwriter.Writer)
+	w.Init(os.Stdout, 8, 8, 8, '\t', 0)
 
+	fmt.Printf("\tSynonyms:\n")
+
+	var size int = len(u.Synonyms)
+	var str string = ""
+	// Print the synonyms two columns
 	for i, s := range u.Synonyms {
-		fmt.Print(s)
-		if i+1 == length {
-			break
+		if i%2 == 0 {
+			str = "•" + s
+			if i+1 == size {
+				fmt.Fprintf(w, "\t  %s\t%s\n", str, "")
+			}
 		} else {
-			fmt.Print(", ")
+			fmt.Fprintf(w, "\t  %s\t%s\n", str, "•"+s)
 		}
 	}
+	w.Flush()
 
 	fmt.Println()
+}
+
+// splitDef splits a given string so that each line of the string is at most
+// the length of the maxLen
+func splitDef(s string, maxLen int) string {
+	i := strings.Index(string([]byte(s)[maxLen:]), " ") + maxLen
+
+	var end string
+	if len([]byte(s)[i:]) > maxLen {
+		end = splitDef(string([]byte(s)[i:]), maxLen)
+	} else {
+		end = string([]byte(s)[i:])
+	}
+
+	s = string([]byte(s)[:i]) + "\n     " + end
+	return s
 }
 
 // PrintDefinition prints the definition of the word
@@ -54,7 +82,11 @@ func (term WordType) printDefinition(showSynonyms bool) {
 	fmt.Printf("  %s:\n", term.PartOfSpeech)
 
 	for _, def := range term.Definitions {
-		fmt.Printf("    • %s\n", def.Definition)
+		if len(def.Definition) > 80 {
+			fmt.Printf("    • %s\n", splitDef(def.Definition, 80))
+		} else {
+			fmt.Printf("    • %s\n", def.Definition)
+		}
 		if showSynonyms {
 			def.printSynonyms()
 		}
