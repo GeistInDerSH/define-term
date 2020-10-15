@@ -5,7 +5,7 @@ Application written in Golang to allow for the user to define a given term.
 ## Usage
 
 ```
-def [-l language\_code] [-s] word
+def [-l language_code] [-s] word
 ```
 ### Flags
 
